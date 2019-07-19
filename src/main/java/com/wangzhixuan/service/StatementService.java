@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface StatementService {
 
-    public List<StatementVo> find();
+    public List<StatementVo> find(Integer year, String website);
 
     List<StatementVo> quaryMonth(Integer month);
 }

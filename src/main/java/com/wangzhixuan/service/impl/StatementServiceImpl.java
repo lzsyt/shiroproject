@@ -16,9 +16,12 @@ public class StatementServiceImpl implements StatementService {
     private StatementVoMapper statementVoMapper;
 
     @Override
-    public List<StatementVo> find() {
-        Date date = new Date();
-        return statementVoMapper.find(new SimpleDateFormat("YY").format(date));
+    public List<StatementVo> find(Integer year,String websiste) {
+        if (year == null || year == 0) {
+            Date date = new Date();
+            year = Integer.valueOf(new SimpleDateFormat("yy").format(date));
+        }
+        return statementVoMapper.find(year,websiste);
     }
 
     @Override

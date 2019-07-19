@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
@@ -27,13 +28,12 @@ public class StatementController {
 
     @RequestMapping("data")
     @ResponseBody
-    public String data(){
-        List<StatementVo> statementVos = statementService.find();
+    public String data(@RequestParam(value = "year",required = false)Integer year,
+                       @RequestParam(value = "website",required = false)String website){
+        List<StatementVo> statementVos = statementService.find(year,website);
         List<String> date = new ArrayList<>();
         List<Integer> data = new ArrayList<>();
-
-        for (StatementVo statmentvo: statementVos
-             ) {
+        for (StatementVo statmentvo: statementVos) {
             data.add(statmentvo.getData());
         }
 

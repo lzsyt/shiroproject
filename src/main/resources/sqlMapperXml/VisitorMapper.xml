@@ -2,28 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wangzhixuan.mapper.VisitorMapper">
 
-	<!-- 通用查询映射结果 -->
-	<resultMap id="BaseResultMap" type="com.wangzhixuan.model.Visitor">
-		<id column="id" property="id" />
-		<result column="visitor_name" property="visitorName" />
-		<result column="IP" property="ip" />
-		<result column="visitor_page" property="visitorPage" />
-		<result column="visitor_time" property="visitorTime" />
-		<result column="visitor_addr" property="visitorAddr" />
-		<result column="visitor_type" property="visitorType" />
-	</resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wangzhixuan.model.Visitor">
+        <id column="id" property="id"/>
+        <result column="visitor_name" property="visitorName"/>
+        <result column="IP" property="ip"/>
+        <result column="visitor_page" property="visitorPage"/>
+        <result column="visitor_time" property="visitorTime"/>
+        <result column="visitor_addr" property="visitorAddr"/>
+        <result column="visitor_type" property="visitorType"/>
+    </resultMap>
 
-	<select id="selectVisitor" resultType="Map" parameterType="java.lang.String">
-         SELECT visitor_name,ip,visitor_addr,visitor_page,visitor_pageName,visitor_type,
-                visitor_time,id,p.product_name
-                 FROM   visitor v left join product p
-                 on v.visitor_productId=p.product_id
-				<where>
-					<if test="visitor_pageName!=null and visitor_pageName!=''">
-						visitor_pageName LIKE '%${visitor_pageName}%' and not like '%手机%';
-					</if>
-				</where>
-            ORDER BY visitor_time DESC
-	</select>
+    <select id="selectVisitor" resultType="Map" parameterType="java.lang.String">
+        SELECT visitor_name,ip,visitor_addr,visitor_page,visitor_pageName,visitor_type,
+        visitor_time,id,p.product_name
+        FROM
+        (select * from visitor
+        <where>
+            <if test="visitor_pageName!=null and visitor_pageName=='光合硅能'">
+                visitor_pageName not LIKE '%手机%'
+            </if>
+        </where>)
+        v left join product p
+        on v.visitor_productId=p.product_id
+        <where>
+            <if test="visitor_pageName!=null and visitor_pageName!=''">
+                visitor_pageName LIKE '%${visitor_pageName}%'
+            </if>
+        </where>
+        ORDER BY visitor_time DESC
+    </select>
 
 </mapper>

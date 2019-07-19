@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface StatementVoMapper extends BaseMapper<StatementVo> {
 
-    public List<StatementVo> find(@Param("year") String year);
+    public List<StatementVo> find(@Param("year") Integer year, @Param("website") String website);
 
     public List<StatementVo> quaryMonth(@Param("month") Integer month);
 
