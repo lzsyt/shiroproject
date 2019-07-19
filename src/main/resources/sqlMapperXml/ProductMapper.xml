@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangzhixuan.mapper.ProductMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.wangzhixuan.model.Product">
+		<id column="product_id" property="productId" />
+		<result column="product_name" property="productName" />
+		<result column="en_product_name" property="en_productName" />
+		<result column="price" property="price" />
+		<result column="creater" property="creater" />
+		<result column="product_synopsis" property="productSynopsis" />
+		<result column="en_product_synopsis" property="en_productSynopsis" />
+		<result column="product_description" property="productDescription" />
+		<result column="en_product_description" property="en_productDescription" />
+		<result column="isdelet" property="isdelet" />
+		<result column="product_type" property="productType" />
+		<result column="type" property="type" />
+
+		<collection property="images"  ofType="com.wangzhixuan.model.Image">
+			<id column="image_id" property="imageId" />
+			<result column="file_name" property="fileName" />
+			<result column="image_path" property="imagePath" />
+			<result column="image_type" property="imageType" />
+			<result column="image_title" property="imageTitle" />
+			<result column="en_image_title" property="en_imageTitle" />
+			<result column="image_description" property="imageDescription" />
+			<result column="en_image_description" property="en_imageDescription" />
+			<result column="image_detail" property="imageDetail" />
+			<result column="en_image_detail" property="en_imageDetail" />
+			<result column="product_id" property="productId" />
+			<result column="update_time" property="updateTime" />
+		</collection>
+	</resultMap>
+
+	<select id="selectProductPage" resultType="Map" >
+		SELECT p.product_id AS productId, p.product_name AS productName,p.en_product_name AS en_productName, p.price, p.creater AS creater,
+		p.product_synopsis AS productSynopsis,p.en_product_synopsis AS en_productSynopsis, p.product_description AS productDescription, p.en_product_description AS en_productDescription,p.isdelet,
+		p.product_type AS productType, p.type ,t.product_type as productTypeName,p.product_num as productNum
+		FROM product p LEFT JOIN product_type t ON p.product_type = t.id
+		<where>
+			<if test=" productType != null ">
+				p.product_type = #{productType}
+			</if>
+			<if test="productName !=null and productName != ''">
+				p.product_name like CONCAT(CONCAT('%',#{productName},'%'))
+			</if>
+			<if test="en_productName !=null and en_productName != ''">
+				p.en_product_name like CONCAT(CONCAT('%',#{en_productName},'%'))
+			</if>
+			<if test="productTypeName!=null and productTypeName != ''">
+				t.product_type like CONCAT(CONCAT('%',#{productTypeName},'%'))
+			</if>
+			<if test="creater!=null and creater!=''">
+				p.creater=#{creater}
+			</if>
+		</where>
+    </select>
+
+	<select id="TwoSelectOne" resultType="Product"  parameterType="Product">
+		    select product_id as productId  from product
+		     <where>
+				 <if test="productName != null ">
+					 product.product_name=#{productName}
+				 </if>
+				 <if test="en_productName != null ">
+					 product.en_product_name=#{en_productName}
+				 </if>
+				 and  product.product_type=#{productType}
+			 </where>
+	</select>
+
+
+
+</mapper>

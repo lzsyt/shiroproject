@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangzhixuan.mapper.NewsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="NewsResultMap" type="com.wangzhixuan.model.News">
+        <id column="news_id" property="newsId" />
+        <result column="news_name" property="newsName" />
+        <result column="news_description" property="newsDescription" />
+        <result column="news_content" property="newsContent" />
+        <result column="create_time" property="createTime" />
+        <result column="en_news_name" property="enNewsName" />
+        <result column="en_news_description" property="enNewsDescription" />
+        <result column="en_news_content" property="enNewsContent" />
+        <result column="product_type" property="productType" />
+    </resultMap>
+
+    <select id="selectAll" resultMap="NewsResultMap">
+        SELECT n.news_id,n.news_name,n.news_description,n.news_content,n.create_time,n.en_news_name,n.en_news_description,n.en_news_content,n.product_type
+        from shiro330.news n left join shiro330.product_type p on n.product_type=p.id
+        <where>
+          <if test="productType!=null and productType!=''">
+            n.product_type=#{productType}
+          </if>
+        </where>
+        ORDER by n.create_time DESC
+    </select>
+    <select id="selectAllNews" parameterType="java.util.Map" resultMap="NewsResultMap">
+        select * FROM news ORDER by create_time DESC limit #{from},#{size}
+    </select>
+    <delete id="deleteById" parameterType="int">
+        DELETE from news where id=#{id}
+    </delete>
+    <select id="selectById" resultMap="NewsResultMap">
+        select * from news where news_id = #{id}
+    </select>
+  <select id="selectAllSize" resultType="int">
+    select count(*) from news;
+  </select>
+  <update id="updateNews" parameterType="News">
+    UPDATE news set news_name=#{newsName},news_description=#{newsDescription},news_content=#{newsContent},
+    create_time=#{createTime},en_news_name=#{enNewsName},en_news_description=#{enNewsDescription},en_news_content=#{enNewsContent},product_type=#{productType}
+    where news_id=#{newsId}
+  </update>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LogisticsMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        goods_name,
+        deliver_name,
+        deliver_phone,
+        deliver_region,
+        deliver_address_detail,
+        goods_volume,
+        goods_weight,
+        accept_region,
+        accept_address_detail,
+        accept_name,
+        accept_phone,
+        comment,
+        state,
+        tracking_number,
+        logstics_type,
+        deliver_time
+
+
+    </sql>
+    <select id="selectAll" resultType="pd">
+       select deliver_name,goods_name, goods_volume, goods_weight,accept_name,state
+       from logistics_info
+    </select>
+    <insert id="saveLogistics" parameterType="pd">
+        insert into (<include refid="Base_Column_List"></include>) values
+        (#{goods_name},#{deliver_name},#{deliver_phone},#{deliver_region},
+        #{deliver_address_detail},#{goods_volume},#{goods_weight},#{accept_region},
+        #{accept_address_detail},#{accept_name},#{accept_phone},#{comment},
+        #{state},#{tracking_number},#{logstics_type},#{deliver_time})
+    </insert>
+
+</mapper>

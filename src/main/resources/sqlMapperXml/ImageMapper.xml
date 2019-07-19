@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangzhixuan.mapper.ImageMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.wangzhixuan.model.Image">
+		<id column="image_id" property="imageId" />
+		<result column="file_name" property="fileName" />
+		<result column="en_file_name" property="en_fileName" />
+		<result column="image_path" property="imagePath" />
+		<result column="image_type" property="imageType" />
+		<result column="image_title" property="imageTitle" />
+		<result column="image_description" property="imageDescription" />
+		<result column="image_detail" property="imageDetail" />
+		<result column="product_id" property="productId" />
+		<result column="update_time" property="updateTime" />
+		<result column="product_type" property="productType"/>
+		<result column="en_image_title" property="en_imageTitle"/>
+		<result column="en_image_description" property="en_imageDescription"/>
+		<result column="en_image_detail" property="en_imageDetail"/>
+
+		<association property="product"  javaType="com.wangzhixuan.model.Product">
+			<!-- id：关联查询用户的唯 一标识
+            column：指定唯 一标识用户信息的列
+            javaType：映射到user的哪个属性
+             -->
+			<id column="product_id" property="productId" />
+			<result column="product_name" property="productName" />
+			<result column="en_product_name" property="en_productName" />
+			<result column="price" property="price" />
+			<result column="creater" property="creater" />
+			<result column="product_synopsis" property="productSynopsis" />
+			<result column="en_product_synopsis" property="en_productSynopsis" />
+			<result column="product_description" property="productDescription" />
+			<result column="en_product_description" property="en_productDescription" />
+			<result column="isdelet" property="isdelet" />
+			<result column="product_type" property="productType" />
+			<result column="type" property="type" />
+		</association>
+
+	</resultMap>
+
+	<select id="selectUserPage" resultType="Map">
+		SELECT i.image_id AS imageId, i.file_name AS fileName, i.en_file_name AS en_fileName,i.image_path AS imagePath , i.image_type AS imageType,i.image_title AS imageTitle,i.en_image_title AS en_imageTitle,
+		i.image_description AS imageDescription, i.en_image_description AS en_imageDescription,i.image_detail AS imageDetail,i.en_image_detail AS en_imageDetail, i.product_id AS productId, i.update_time AS updateTime,
+		t.type_name AS typeName,p.product_name as productName ,p.en_product_name as en_productName ,pt.product_type as productType
+		FROM image i LEFT JOIN image_type t ON i.image_type = t.id LEFT JOIN product p on p.product_id=i.product_id
+		LEFT JOIN product_type pt on pt.id=i.product_type
+			<where>
+					<if test="imageType != null ">
+						i.image_type = #{imageType}
+					</if>
+				    <!--产品类型id-->
+				    <if test="productTypeId!=null and productTypeId!=''">
+						and i.product_type =#{productTypeId}
+					</if>
+					<if test="imageTitle!=null and imageTitle!=''">
+						and i.image_title like CONCAT(CONCAT('%',#{imageTitle},'%'))
+					</if>
+					<if test="en_imageTitle!=null and en_imageTitle!=''">
+						and i.en_image_title like CONCAT(CONCAT('%',#{en_imageTitle},'%'))
+					</if>
+					<if test="productName!=null and productName!=''">
+						and p.product_name like CONCAT(CONCAT('%',#{productName},'%'))
+					</if>
+					<if test="en_productName!=null and en_productName!=''">
+						and p.en_product_name like CONCAT(CONCAT('%',#{en_productName},'%'))
+					</if>
+					<if test=" startTime != null ">
+						<![CDATA[ and i.update_time >= #{startTime} ]]>
+					</if>
+					<if test=" endTime != null ">
+						<![CDATA[ and i.update_time <= #{endTime} ]]>
+					</if>
+			</where>
+    </select>
+	<sql id="Base_Column_List">file_name,en_file_name,image_path,image_title,en_image_title,image_description,en_image_description,image_detail,i.product_id,update_time,image_type</sql>
+	<select id="selectByCondition" resultMap="BaseResultMap" parameterType="Image">
+		select <include refid="Base_Column_List"></include> from image i left join product p
+		 on i.product_id=p.product_id
+		<where>
+			<if test="imageType!=null and imageType!=''">
+				image_type=#{imageType}
+			</if>
+			<if test="productId!=null and productId!=''">
+				and i.product_id=#{productId}
+			</if>
+			<if test="productType!=null and productType!=''">
+                and i.product_type=#{productType}
+			</if>
+			order by i.image_id
+		</where>
+	</select>
+	<select id="selectByTypeId" resultMap="BaseResultMap" parameterType="Image">
+		select file_name,en_file_name,image_path,image_title,image_description,image_detail,en_image_title,en_image_description,en_image_detail,product.product_id,update_time from image inner join product on image.product_id=product.product_id
+		<where>
+			<if test="imageType!=null ">
+				image_type=#{imageType}
+			</if>
+			and product.product_type=#{productType}
+		</where>
+	</select>
+	<select id="findByName" parameterType="String" resultMap="BaseResultMap">
+		SELECT image_path,product_name as image_title,file_name,en_file_name,p.product_id FROM product p,image i WHERE p.product_id=i.product_id and p.product_name LIKE concat("%",#{productName},"%") AND image_type=5
+	</select>
+
+    <select id="selectImageById" resultMap="BaseResultMap" parameterType="String">
+            SELECT image_id,file_name,en_file_name,image_path,image_type,image_title,en_image_title,image_description,en_image_description,image_detail,en_image_detail,product_id,update_time,product_type
+		    FROM image
+             <where>
+					  image_id=#{imageId}
+             </where>
+    </select>
+
+
+	<select id="pidSelectImgPath" resultMap="BaseResultMap">
+		select DISTINCT image_path,image_title,product.product_id AS productId from  image  inner join product  on image.product_id=product.product_id
+		<where>
+			product.product_id=#{productId}
+		</where>
+	</select>
+
+	<insert id="insertToAll" parameterType="Image">
+	     INSERT INTO image (file_name,en_file_name,image_path,image_type,image_title,product_id,update_time) VALUES (#{fileName},#{imagePath},#{imageType},#{imageTitle},#{productId},#{updateTime})
+ 	</insert>
+	<update id="updateImage" parameterType="Image" >
+		     UPDATE image set file_name=#{fileName},update_time=#{updateTime}
+			<where>
+				product_id=#{productId} and image_type=#{imageType}
+			</where>
+	</update>
+	<delete id="pidDeleteImage" parameterType="Image">
+		     delete from image
+		    <where>
+		            product_id = #{productId} and image_type=#{imageType}
+			</where>
+	</delete>
+	<delete id="pidDeleteImageToAll" parameterType="Image">
+			   delete from image
+			   <where>
+				     product_id = #{productId}
+			   </where>
+	</delete>
+</mapper>

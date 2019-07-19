@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="off">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+        </Console>
+        <!--<RollingFile name="myRollingFile" fileName="D:/logs/app.log"
+                     filePattern="D:/logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+          <PatternLayout pattern="[%-5p][%d{yyyy-MM-dd HH:mm:ss}] [%c %L] %m%n"/>
+          <SizeBasedTriggeringPolicy size="20KB"/>
+        </RollingFile>-->
+    </Appenders>
+
+    <Loggers>
+        <!-- myibatis log configure -->
+        <logger name="com.apache.ibatis" level="INFO"/>
+        <logger name="org.mybatis.spring" level="DEBUG"/>
+        <logger name="java.sql.Connection" level="DEBUG"/>
+        <logger name="java.sql.Statement" level="DEBUG"/>
+        <logger name="java.sql.PreparedStatement" level="DEBUG"/>
+
+        <!-- 减少部分debug日志 -->
+        <logger name="druid.sql" level="INFO"/>
+        <logger name="org.apache.shiro" level="INFO"/>
+        <logger name="org.mybatis.spring" level="INFO"/>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.springframework.context" level="WARN"/>
+        <logger name="org.springframework.beans" level="WARN"/>
+        <logger name="com.baomidou.mybatisplus" level="INFO"/>
+        <logger name="org.apache.ibatis.io" level="INFO"/>
+        <logger name="org.apache.velocity" level="INFO"/>
+        <logger name="org.hibernate.validator" level="INFO"/>
+        <!-- cache INFO -->
+        <logger name="net.sf.ehcache" level="INFO"/>
+        <logger name="org.springframework.cache" level="INFO"/>
+        <logger name="com.wangzhixuan.commons.shiro.cache" level="INFO"/>
+
+        <!-- 业务debug日志 -->
+        <logger name="com.wangzhixuan" level="DEBUG"/>
+
+        <Root level="DEBUG">
+            <AppenderRef ref="Console" />
+           <!--<appender-ref ref="myRollingFile" />-->
+        </Root>
+    </Loggers>
+</Configuration>

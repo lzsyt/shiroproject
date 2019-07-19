@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangzhixuan.mapper.StatementVoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wangzhixuan.model.vo.StatementVo">
+        <result column="date" property="date"/>
+        <result column="data" property="data"/>
+    </resultMap>
+
+    <select id="find" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		  count(1) as data ,
+		  DATE_FORMAT(visitor.visitor_time,'%m') as date
+		from visitor
+		 where DATE_FORMAT(visitor_time,'%y') = #{year}
+		 GROUP BY  DATE_FORMAT(visitor.visitor_time,'%m')
+	</select>
+
+	<select id="quaryMonth" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		  count(1) as data ,
+		  DATE_FORMAT(visitor.visitor_time,'%e') as date
+		from visitor
+		 where DATE_FORMAT(visitor_time,'%m') = #{month}
+		 GROUP BY  DATE_FORMAT(visitor.visitor_time,'%e')
+	</select>
+
+
+</mapper>
