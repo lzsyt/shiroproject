@@ -1,12 +1,10 @@
 package com.wangzhixuan.service;
 
-import com.wangzhixuan.model.vo.StatementVo;
-
-import java.util.List;
+import net.sf.json.JSONArray;
 
 public interface StatementService {
 
-    public List<StatementVo> find(Integer year, String website);
+    public JSONArray find(Integer year, String website);
 
-    List<StatementVo> quaryMonth(Integer month);
+    public JSONArray quaryMonth(Integer year, Integer month, String website);
 }

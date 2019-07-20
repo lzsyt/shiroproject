@@ -12,7 +12,6 @@
     <select id="month">
         <option value=""></option>
     </select>
-    <button id="quaryMonth">查询</button>
 
     <label>按网站查询</label>
     <select id="website">
@@ -23,7 +22,8 @@
         <option value="太阳能板">太阳能板</option>
         <option value="手机">光合硅能手机</option>
     </select>
-    <button id="quarywebsite">查询</button>
+
+    <button id="quary">查询</button>
 </div>
 
 <div id="container" style="min-width:400px;height:400px;"></div>
@@ -56,29 +56,25 @@
 
     })
 
-    $("#quaryMonth").click(function () {
-        var month = $("#month").val();
-        console.log(month);
-        month = month.substring(0, month.lastIndexOf("月"));
-        console.log("month:" + month);
-        $.getJSON("${pageContext.request.contextPath}/statment/quaryMonth/" + month, function (data) {
-            highcharts.xAxis[0].update({
-                categories: data[0]
-            });
-            highcharts.series[0].update({
-                data: data[1]
-            })
-        })
-
-
-    })
-
     //
-    $("#quarywebsite").click(function () {
+    $("#quary").click(function () {
 
         var website = $("#website").val();
+        var month = $("#month").val();
+        month = month.substring(0, month.lastIndexOf("月"));
 
-        $.getJSON("${pageContext.request.contextPath}/statment/data?website=" + website, function (data) {
+        if (month!=null&&month!=''&&month!=undefined){
+            if (website!=null&&website!=''&&website!=undefined) {
+                if (parseInt(month)<5){
+                    alert("此网站在5月份之前没有数据");
+                    return;
+                }
+            }
+        }
+
+
+        $.getJSON("${pageContext.request.contextPath}/statment/data?website=" + website + '&month=' + month, function (data) {
+
             highcharts.xAxis[0].update({
                 categories: data[0]
             });

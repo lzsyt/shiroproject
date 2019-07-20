@@ -3,11 +3,11 @@ package com.wangzhixuan.service.impl;
 import com.wangzhixuan.mapper.StatementVoMapper;
 import com.wangzhixuan.model.vo.StatementVo;
 import com.wangzhixuan.service.StatementService;
+import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class StatementServiceImpl implements StatementService {
@@ -16,17 +16,38 @@ public class StatementServiceImpl implements StatementService {
     private StatementVoMapper statementVoMapper;
 
     @Override
-    public List<StatementVo> find(Integer year,String websiste) {
-        if (year == null || year == 0) {
-            Date date = new Date();
-            year = Integer.valueOf(new SimpleDateFormat("yy").format(date));
+    public JSONArray find(Integer year, String websiste) {
+        List<StatementVo> statementVos = statementVoMapper.find(year, websiste);
+        List<String> date = new ArrayList<>();
+        List<Integer> data = new ArrayList<>();
+        for (StatementVo statmentvo: statementVos) {
+            data.add(statmentvo.getData());
         }
-        return statementVoMapper.find(year,websiste);
+        for (StatementVo statementVo: statementVos) {
+            date.add(statementVo.getDate()+"月");
+        }
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.add(date);
+        jsonArray.add(data);
+        return jsonArray;
     }
 
     @Override
-    public List<StatementVo> quaryMonth(Integer month) {
-        return statementVoMapper.quaryMonth(month);
+    public JSONArray quaryMonth(Integer year, Integer month, String websiste) {
+        List<StatementVo> statementVos = statementVoMapper.quaryMonth(year,month,websiste);
+        List<String> date = new ArrayList<>();
+        List<Integer> data = new ArrayList<>();
+        for (StatementVo statmentvo: statementVos
+        ) {
+            data.add(statmentvo.getData());
+        }
+        for (StatementVo statementVo: statementVos) {
+            date.add(statementVo.getDate()+"日");
+        }
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.add(date);
+        jsonArray.add(data);
+        return jsonArray;
     }
 
 }

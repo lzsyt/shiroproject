@@ -10,7 +10,7 @@ public interface StatementVoMapper extends BaseMapper<StatementVo> {
 
     public List<StatementVo> find(@Param("year") Integer year, @Param("website") String website);
 
-    public List<StatementVo> quaryMonth(@Param("month") Integer month);
+    public List<StatementVo> quaryMonth(@Param("year") Integer year, @Param("month") Integer month, @Param("website") String website);
 
 
 }

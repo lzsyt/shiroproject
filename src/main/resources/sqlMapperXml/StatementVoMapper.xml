@@ -37,10 +37,24 @@
 	<select id="quaryMonth" resultMap="BaseResultMap" parameterType="java.lang.Integer">
 		select
 		  count(1) as data ,
-		  DATE_FORMAT(visitor.visitor_time,'%e') as date
-		from visitor
-		 where DATE_FORMAT(visitor_time,'%m') = #{month}
-		 GROUP BY  DATE_FORMAT(visitor.visitor_time,'%e')
+		  DATE_FORMAT(t.visitor_time,'%e') as date
+		from (
+			SELECT a.* FROM (
+				select * from visitor
+					<where>
+						<if test="website!=null and website=='光合硅能'">
+							visitor_pageName not LIKE '%手机%'
+						</if>
+					</where>
+				) AS a
+				<where>
+					<if test="website!=null and website!=''">
+						visitor_pageName LIKE '%${website}%'
+					</if>
+				</where>
+		) as t
+		 where DATE_FORMAT(t.visitor_time,'%m') = #{month} and DATE_FORMAT( t.visitor_time, '%y' ) = #{year}
+		 GROUP BY  DATE_FORMAT(t.visitor_time,'%e')
 	</select>
 
 
