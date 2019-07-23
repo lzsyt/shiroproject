@@ -1,8 +1,11 @@
 package com.wangzhixuan.controller;
 
 
+import com.wangzhixuan.commons.utils.StringUtils;
 import com.wangzhixuan.service.StatementService;
+import net.sf.json.JSON;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +31,7 @@ public class StatementController {
     @RequestMapping("data")
     @ResponseBody
     public String data(@RequestParam(value = "year", required = false) Integer year,
-                       @RequestParam(value = "month", required = false) Integer month,
-                       @RequestParam(value = "website", required = false) String website) {
+                       @RequestParam(value = "month", required = false) Integer month) {
         if (year == null || year == 0) {
             Date date = new Date();
             year = Integer.valueOf(new SimpleDateFormat("yy").format(date));
@@ -37,10 +39,21 @@ public class StatementController {
         JSONArray jsonValues = null;
 
         if (month == null || month == 0) {
-            jsonValues = statementService.find(year, website);
+            jsonValues = statementService.find(year);
         } else {
-            jsonValues = statementService.quaryMonth(year, month, website);
+            jsonValues = statementService.quaryMonth(year, month);
         }
+        jsonValues.add(statementService.getYear());
         return jsonValues.toString();
+    }
+
+
+    @RequestMapping("quaryMonth")
+    @ResponseBody
+    public String quaryMonth(@RequestParam(value = "year") Integer year){
+        JSONArray json = new JSONArray();
+        json.add(statementService.quaryMonth(year));
+        System.out.println(json.toString());
+        return json.toString();
     }
 }

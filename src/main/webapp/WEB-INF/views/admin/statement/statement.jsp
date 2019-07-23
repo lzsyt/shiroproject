@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+
 <head>
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
@@ -8,19 +9,13 @@
 <body>
 
 <div>
+    <label>按年查询</label>
+    <select id="year" onchange="changeYear()">
+        <option value=""></option>
+    </select>
     <label>按月查询</label>
     <select id="month">
         <option value=""></option>
-    </select>
-
-    <label>按网站查询</label>
-    <select id="website">
-        <option value=""></option>
-        <option value="光合硅能">光合硅能</option>
-        <option value="控制器">控制器</option>
-        <option value="风机">风机</option>
-        <option value="太阳能板">太阳能板</option>
-        <option value="手机">光合硅能手机</option>
     </select>
 
     <button id="quary">查询</button>
@@ -31,61 +26,155 @@
 
     var highcharts;
 
-    // 初始化
-    $.getJSON("${pageContext.request.contextPath}/statment/data", function (data) {
-        highcharts = Highcharts.chart('container', {
-            series: [{
-                data: data[1]
-            }],
-            xAxis: {
-                categories: data[0]
-            },
-            title: {
-                text: data[2]
-            },
-            subtitle: {
-                text: '数据来源: 湖南前沿科技有限公司'
-            },
-        });
+    init();
 
-        var month = $("#month")
-        var dateMonth = data[0];
-        for (var i = 0; i < dateMonth.length; i++) {
-            month.append('<option value="' + dateMonth[i] + '">' + dateMonth[i] + '</option>');
-        }
+    //初式化
+    function init() {
+        // 初始化
+        $.getJSON("${pageContext.request.contextPath}/statment/data", function (data) {
+            highcharts = Highcharts.chart('container', {
+                series: [{
+                    name: '光合硅能',
+                    data: data[1]
+                }, {
+                    name: '控制器',
+                    data: data[2]
+                }, {
+                    name: '风机',
+                    data: data[3]
+                }, {
+                    name: '太阳能板',
+                    data: data[4]
+                }, {
+                    name: '手机',
+                    data: data[5]
+                }],
+                xAxis: {
+                    categories: data[0]
+                },
+                yAxis: {
+                    title: {
+                        text: '点击量 (次)'
+                    }
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            // 开启数据标签
+                            enabled: true
+                        },
+                        // 关闭鼠标跟踪，对应的提示框、点击事件会失效
+                        enableMouseTracking: false
+                    }
+                },
+                title: {
+                    text: '湖南前沿科技各个网站点击量'
+                },
+                subtitle: {
+                    text: '数据来源: 湖南前沿科技有限公司'
+                },
+            });
 
-    })
+            //初始化月份
+            if (document.getElementById('month').options.length == 1) {
+                var month = $("#month")
+                for (var i = 0; i < data[0].length; i++) {
+                    var str = data[0][i]
+                    month.append('<option value="' + str + '">' + str + '</option>');
+                }
+            }
+
+            //初始化年份
+            if (document.getElementById('year').options.length == 1) {
+                var year = $("#year")
+                var dateyear = data[6];
+                for (var i = 0; i < dateyear.length; i++) {
+                    year.append('<option value="' + dateyear[i] + '">' + '20' + dateyear[i] + '</option>');
+                }
+            }
+            $("#month").val('所有');
+            $("#year").val('19');
+        })
+    }
 
     //
     $("#quary").click(function () {
 
-        var website = $("#website").val();
         var month = $("#month").val();
+        var year = $("#year").val();
+
         month = month.substring(0, month.lastIndexOf("月"));
 
-        if (month!=null&&month!=''&&month!=undefined){
-            if (website!=null&&website!=''&&website!=undefined) {
-                if (parseInt(month)<5){
-                    alert("此网站在5月份之前没有数据");
-                    return;
-                }
-            }
-        }
-
-
-        $.getJSON("${pageContext.request.contextPath}/statment/data?website=" + website + '&month=' + month, function (data) {
-
-            highcharts.xAxis[0].update({
-                categories: data[0]
+        $.getJSON("${pageContext.request.contextPath}/statment/data?month=" + month + '&year=' + year, function (data) {
+            highcharts = Highcharts.chart('container', {
+                series: [{
+                    name: '光合硅能',
+                    data: data[1]
+                }, {
+                    name: '控制器',
+                    data: data[2]
+                }, {
+                    name: '风机',
+                    data: data[3]
+                }, {
+                    name: '太阳能板',
+                    data: data[4]
+                }, {
+                    name: '手机',
+                    data: data[5]
+                }],
+                xAxis: {
+                    categories: data[0]
+                },
+                yAxis: {
+                    title: {
+                        text: '点击量 (次)'
+                    }
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            // 开启数据标签
+                            enabled: true
+                        },
+                        // 关闭鼠标跟踪，对应的提示框、点击事件会失效
+                        enableMouseTracking: false
+                    }
+                },
+                title: {
+                    text: '湖南前沿科技各个网站点击量'
+                },
+                subtitle: {
+                    text: '数据来源: 湖南前沿科技有限公司'
+                },
             });
-            highcharts.series[0].update({
-                data: data[1]
-            })
+
         });
 
 
     })
 
+    function changeYear() {
+
+        $("#month").empty();
+
+
+        var year=$("#year").val();
+        console.log(year)
+
+        $.getJSON("${pageContext.request.contextPath}/statment/quaryMonth?year=" + year, function (data) {
+
+            var month = $("#month")
+
+            for (var i = 0; i < data[0].length; i++) {
+                var str = data[0][i]
+                console.log(data[0][i])
+                month.append('<option value="' + str + '">' + str + '</option>');
+            }
+
+
+        });
+    }
 
 
 </script>
