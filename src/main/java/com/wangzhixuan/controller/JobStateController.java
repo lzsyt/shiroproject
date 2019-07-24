@@ -1,21 +1,21 @@
 package com.wangzhixuan.controller;
 
-import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.wangzhixuan.commons.base.BaseController;
 import com.wangzhixuan.commons.result.PageInfo;
 import com.wangzhixuan.model.JobState;
 import com.wangzhixuan.service.IJobStateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 
+
+@Controller
+@RequestMapping("job")
 public class JobStateController extends BaseController {
 
     @Autowired
@@ -56,7 +56,6 @@ public class JobStateController extends BaseController {
         JobState LocalJobState = this.jobStateService.selectById(jobState.getId());
         jobState.setJobClass(LocalJobState.getJobClass());
         jobState.setJobGroup(LocalJobState.getJobGroup());
-
         this.jobStateService.updateById(jobState);
         return renderSuccess("编辑成功！");
     }
