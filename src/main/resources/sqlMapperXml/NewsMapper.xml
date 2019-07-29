@@ -17,7 +17,7 @@
 
     <select id="selectAll" resultMap="NewsResultMap">
         SELECT n.news_id,n.news_name,n.news_description,n.news_content,n.create_time,n.en_news_name,n.en_news_description,n.en_news_content,n.product_type
-        from shiro330.news n left join shiro330.product_type p on n.product_type=p.id
+        from shiro401.news n left join shiro401.product_type p on n.product_type=p.id
         <where>
           <if test="productType!=null and productType!=''">
             n.product_type=#{productType}

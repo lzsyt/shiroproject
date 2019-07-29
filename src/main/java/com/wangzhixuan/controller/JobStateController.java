@@ -3,6 +3,8 @@ package com.wangzhixuan.controller;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.wangzhixuan.commons.base.BaseController;
 import com.wangzhixuan.commons.result.PageInfo;
+import com.wangzhixuan.commons.utils.CronUtil;
+import com.wangzhixuan.commons.utils.HttpUtils;
 import com.wangzhixuan.model.JobState;
 import com.wangzhixuan.service.IJobStateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +55,23 @@ public class JobStateController extends BaseController {
     @RequestMapping({"/edit"})
     @ResponseBody
     public Object edit(@Valid JobState jobState) {
+
         JobState LocalJobState = this.jobStateService.selectById(jobState.getId());
+
+        String strings = "jobClassName=" + LocalJobState.getJobClass() + "&jobGroupName=" + LocalJobState.getJobGroup();
+
+
+        if (jobState.getJobState() == 1) {
+            HttpUtils.sendPost("http://localhost:12741/job/pausejob", strings);
+        } else if (jobState.getJobState() == 2) {
+            HttpUtils.sendPost("http://localhost:12741/job/resumejob", strings);
+        } else if (jobState.getJobState() == 3) {
+            String cron = CronUtil.getCron(jobState.getCronExpression());
+            strings += "&cronExpression=" + cron;;
+            HttpUtils.sendPost("http://localhost:12741/job/reschedulejob", strings);
+        }
+
+
         jobState.setJobClass(LocalJobState.getJobClass());
         jobState.setJobGroup(LocalJobState.getJobGroup());
         this.jobStateService.updateById(jobState);
