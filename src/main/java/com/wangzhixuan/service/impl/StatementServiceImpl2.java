@@ -75,7 +75,7 @@ public class StatementServiceImpl2 implements StatementService {
         for (int i = minDay; i <= maxDay; i++) {
             day.add(i + "日");
         }
-        jsonValues.add(month);
+        jsonValues.add(day);
         for (int i = 0; i < mapList.size(); i++) {
             jsonValues.add(formatMapToList(mapList.get(i)));
         }
@@ -101,7 +101,7 @@ public class StatementServiceImpl2 implements StatementService {
     }
 
     private void function(List<Map<Integer, StatementVo>> mapList, int maxDay, int minDay) {
-        for (int i = minDay; i < maxDay; i++) {
+        for (int i = minDay; i <= maxDay; i++) {
             for (Map<Integer, StatementVo> map : mapList) {
                 if (!map.containsKey(i)) {
                     StatementVo statementVo = new StatementVo();

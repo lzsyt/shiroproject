@@ -58,17 +58,17 @@ public class JobStateController extends BaseController {
 
         JobState LocalJobState = this.jobStateService.selectById(jobState.getId());
 
-        String strings = "jobClassName=" + LocalJobState.getJobClass() + "&jobGroupName=" + LocalJobState.getJobGroup();
+        String params = "jobClassName=" + LocalJobState.getJobClass() + "&jobGroupName=" + LocalJobState.getJobGroup();
 
 
         if (jobState.getJobState() == 1) {
-            HttpUtils.sendPost("http://localhost:12741/job/pausejob", strings);
+            HttpUtils.sendPost("http://localhost:80/job/pausejob", params);
         } else if (jobState.getJobState() == 2) {
-            HttpUtils.sendPost("http://localhost:12741/job/resumejob", strings);
+            HttpUtils.sendPost("http://localhost:80/job/resumejob", params);
         } else if (jobState.getJobState() == 3) {
             String cron = CronUtil.getCron(jobState.getCronExpression());
-            strings += "&cronExpression=" + cron;;
-            HttpUtils.sendPost("http://localhost:12741/job/reschedulejob", strings);
+            params += "&cronExpression=" + cron;;
+            HttpUtils.sendPost("http://localhost:80/job/reschedulejob", params);
         }
 
 

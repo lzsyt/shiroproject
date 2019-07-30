@@ -159,6 +159,7 @@
         $.getJSON("${pageContext.request.contextPath}/statment/quaryMonth?year=" + year, function (data) {
 
             var month = $("#month")
+            month.append('<option value="' + '' + '">' + '' + '</option>');
 
             for (var i = 0; i < data[0].length; i++) {
                 var str = data[0][i]
