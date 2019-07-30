@@ -5,12 +5,13 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
-  <title>风力发电机-永动新能源有限公司</title>
+  <title>${news.title}</title>
+  <meta name="keywords"
+        content="${news.keyword}"/>
+  <meta name="description"
+        content="${news.description}"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta name="keywords" content="小型风力发电机,风光互补路灯系统,太阳能发电系统,家用太阳能发电系统,光伏发电系统,风力发电机,风力发电机厂家,风力发电机价格,小型风力发电机,中小型风力发电机,中型风力发电机,湖南前沿科技,风光互补系统,发电系统,水平轴风力发电机,垂直轴风力发电机" />
-  <meta name="description" content="永动新能源有限公司主要产品有100W-100kW水平轴风力发电机、垂直轴风力发电机等中小型风力发电机、风光互补路灯、风光互补分布式发电系统、太阳能灯路灯等，可为客户提供风力发电、风光互补发电、风光互补路灯，太阳能路灯系统、 太阳能光伏提水系统及光伏并网发电等一站式解决方案，电话:17773166613" />
-
   <link rel="shortcut icon" href="${staticPath }/static/images/yongdong.png" type="image/x-icon"/>
   <script type="application/x-javascript"> addEventListener("load", function () {
     setTimeout(hideURLbar, 0);

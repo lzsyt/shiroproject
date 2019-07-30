@@ -17,6 +17,21 @@
             rownumbers : true,
             frozenColumns : [ [
                 {
+                field : 'title',
+                title : '新闻title',
+                align:'center',
+                width : 120
+            },{
+                field : 'keyword',
+                title : '新闻keyword',
+                align:'center',
+                width : 120
+            },{
+                field : 'description',
+                title : '新闻description',
+                align:'center',
+                width : 120
+            },{
                 field : 'newsName',
                 title : '新闻名称',
                 align:'center',

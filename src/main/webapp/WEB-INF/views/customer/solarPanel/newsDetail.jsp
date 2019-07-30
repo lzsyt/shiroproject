@@ -5,11 +5,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
-  <title>企业文化</title>
+  <title>${news.title}</title>
+  <meta name="keywords"
+        content="${news.keyword}"/>
+  <meta name="description"
+        content="${news.description}"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <meta name="keywords" content="Uibrush Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template,
-    Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design"/>
+
   <meta name="baidu-site-verification" content="QEMpUmzU1b" />
   <script type="application/x-javascript"> addEventListener("load", function () {
     setTimeout(hideURLbar, 0);

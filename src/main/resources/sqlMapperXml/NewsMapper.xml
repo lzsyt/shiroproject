@@ -29,7 +29,7 @@
         select * FROM news ORDER by create_time DESC limit #{from},#{size}
     </select>
     <delete id="deleteById" parameterType="int">
-        DELETE from news where id=#{id}
+        DELETE from news where news_id=#{id}
     </delete>
     <select id="selectById" resultMap="NewsResultMap">
         select * from news where news_id = #{id}

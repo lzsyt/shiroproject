@@ -1,8 +1,11 @@
 package com.wangzhixuan.model;
 
+import com.baomidou.mybatisplus.activerecord.Model;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class News {
+public class News extends Model<News> {
     private Integer newsId;
     private String newsName;
     private String newsDescription;
@@ -13,16 +16,43 @@ public class News {
     private String enNewsDescription;
     private String enNewsContent;
     private Integer productType;
+    private String title;
+    private String keyword;
+    private String description;
 
-  public Integer getProductType() {
-    return productType;
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public void setProductType(Integer productType) {
-    this.productType = productType;
-  }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-  public Integer getNewsId() {
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getProductType() {
+        return productType;
+    }
+
+    public void setProductType(Integer productType) {
+        this.productType = productType;
+    }
+
+    public Integer getNewsId() {
         return newsId;
     }
 
@@ -92,5 +122,10 @@ public class News {
 
     public void setEnNewsContent(String enNewsContent) {
         this.enNewsContent = enNewsContent;
+    }
+
+    @Override
+    protected Serializable pkVal() {
+        return this.newsId;
     }
 }

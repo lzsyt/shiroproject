@@ -5,11 +5,11 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
-  <title>${news.newsName}</title>
+  <title>${news.title}</title>
   <meta name="keywords"
-        content="${news.newsName}"/>
+        content="${news.keyword}"/>
   <meta name="description"
-        content="${news.newsDescription}"/>
+        content="${news.description}"/>
   <%--增加地名，提高本地排名--%>
   <meta name="location" content="province=湖南;city长沙">
   <%--url 唯一化--%>
