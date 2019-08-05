@@ -1,5 +1,7 @@
 package com.wangzhixuan.controller;
 
+import com.baomidou.mybatisplus.mapper.Condition;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.wangzhixuan.commons.base.BaseController;
 import com.wangzhixuan.commons.utils.IpAdrressUtil;
 import com.wangzhixuan.model.Customer;
@@ -9,6 +11,7 @@ import com.wangzhixuan.model.Product;
 import com.wangzhixuan.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -184,6 +187,14 @@ public class SolarPanelController extends BaseController{
       News news= newsService.selectById(newsId);
       request.setAttribute("news", news);
       return "customer/solarPanel/newsDetail";
+    }
+
+    @RequestMapping({"/newsCenter"})
+    public String newsCenter(Model model, @RequestParam(value = "pg",defaultValue = "1") Integer pg, @RequestParam(value = "pageSize",defaultValue = "5") Integer pageSize) {
+        Page<News> page = new Page(pg, pageSize);
+        this.newsService.selectPage(page, Condition.create().eq("product_Type", 3));
+        model.addAttribute("page", page);
+        return "customer/solarPanel/newsCenter";
     }
 
 }

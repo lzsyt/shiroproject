@@ -72,6 +72,7 @@
                               <li><a href="${path}/windEnergy/aboutUs" id="aboutUs" >企业文化</a></li>
                               <li><a href="${path}/windEnergy/contact" id="contact" >联系我们</a></li>
                               <li><a href="${path}/windEnergy/case" id="case" >经典案例</a></li>
+                              <li><a href="${path}/windEnergy/newsCenter" id="newsCenter" >新闻中心</a></li>
                           </ul>
                           <div class="nav-right-wrapper"> <span class="call-mun">17773166613</span> </div>
                       </div>

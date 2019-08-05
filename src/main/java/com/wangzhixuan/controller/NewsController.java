@@ -6,12 +6,13 @@ import com.wangzhixuan.commons.result.PageInfo;
 import com.wangzhixuan.model.News;
 import com.wangzhixuan.service.INewsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -22,6 +23,10 @@ import java.util.Map;
 @Controller
 @RequestMapping("/news")
 public class NewsController extends BaseController {
+
+  @Resource
+  public RedisTemplate<String, News> redisTemplate;
+
   @Autowired
   private INewsService newsService;
 
@@ -77,6 +82,7 @@ public class NewsController extends BaseController {
   public Object add(@Valid News news) {
     news.setCreateTime(new Date());
     newsService.insert(news);
+    redisTemplate.opsForList().leftPush("NewsList", news);
     return renderSuccess("添加成功");
   }
 
@@ -89,9 +95,9 @@ public class NewsController extends BaseController {
    */
   @RequestMapping("/editPage")
   public String editPage(Model model, Integer newsId) {
-    logger.info("newsId:" + newsId);
+//    logger.info("newsId:" + newsId);
     News news = newsService.selectById(newsId);
-    logger.info("newsDescription:" + news.getNewsDescription());
+//    logger.info("newsDescription:" + news.getNewsDescription());
     model.addAttribute("news", news);
     return "admin/news/newsEdit";
   }

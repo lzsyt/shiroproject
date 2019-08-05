@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>如梦技术-主页</title>
+    <title>湖南前沿-主页</title>
     <%@ include file="/commons/basejs.jsp" %>
     <link rel="stylesheet" type="text/css" href="${staticPath }/static/style/css/main.css">
     <script type="text/javascript" src="${staticPath }/static/js/main.js"></script>
@@ -17,7 +17,7 @@
             <div class="head">
                 <table>
                     <tr>
-                        <td width="50%" style="font-size: 14px;">如梦技术</td>
+                        <td width="50%" style="font-size: 14px;">湖南前沿科技有限公司</td>
                         <td width="50%" align="right" style="font-size: 12px;">
                             <div class="easyui-panel rtool" data-options="border:false" style="text-align: right; background: #09C; color: white; margin-top: -1px;">
                                 <a href="#" class="easyui-menubutton" data-options="menu:'#mm1'">
@@ -42,8 +42,14 @@
         </div>
         <div data-options="region:'center', border:false">
             <div id="mainTabs" style="height:250px">
-                <div title="首页" data-options="iconCls:'glyphicon-home',border:false">
+                <%--<div title="首页" data-options="iconCls:'glyphicon-home',border:false">
+                    &lt;%&ndash;<iframe src="http://www.dreamlu.net/" class="easyui-panel" data-options="fit:true,border:false" frameborder="0"></iframe>&ndash;%&gt;
                     <iframe src="http://www.dreamlu.net/" class="easyui-panel" data-options="fit:true,border:false" frameborder="0"></iframe>
+                </div>--%>
+                <div title="首页" data-options="iconCls:'glyphicon-home',border:false">
+                    <%--<iframe src="http://www.dreamlu.net/" class="easyui-panel" data-options="fit:true,border:false" frameborder="0"></iframe>--%>
+                    <%--<iframe src="${path}/image/manager" class="easyui-panel" data-options="fit:true,border:false" frameborder="0"></iframe>--%>
+                    <h1 style="font-size:3em">欢迎登录湖南前沿后台系统！</h1>
                 </div>
             </div>
         </div>

@@ -124,6 +124,26 @@ public class News extends Model<News> {
         this.enNewsContent = enNewsContent;
     }
 
+
+    @Override
+    public String toString() {
+        return "News{" +
+                "newsId=" + newsId +
+                ", newsName='" + newsName + '\'' +
+                ", newsDescription='" + newsDescription + '\'' +
+                ", newsContent='" + newsContent + '\'' +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", enNewsName='" + enNewsName + '\'' +
+                ", enNewsDescription='" + enNewsDescription + '\'' +
+                ", enNewsContent='" + enNewsContent + '\'' +
+                ", productType=" + productType +
+                ", title='" + title + '\'' +
+                ", keyword='" + keyword + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
     @Override
     protected Serializable pkVal() {
         return this.newsId;

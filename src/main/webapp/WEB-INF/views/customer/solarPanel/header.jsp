@@ -79,6 +79,7 @@
                     <li><a href="${path}/solarPanel/aboutUs" id="aboutUs" class="myframe">企业文化</a></li>
                     <li><a href="${path}/solarPanel/contact" id="contact" class="myframe">联系我们</a></li>
                     <li><a href="${path}/solarPanel/case" id="case" class="myframe">经典案例</a></li>
+                    <li><a href="${path}/solarPanel/newsCenter" id="newsCenter" >新闻中心</a></li>
                 </ul>
                 <div class="nav-right-wrapper"><span class="call-mun">17773166613</span></div>
             </div>
