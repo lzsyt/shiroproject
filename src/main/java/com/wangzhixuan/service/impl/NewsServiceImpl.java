@@ -1,51 +1,44 @@
 package com.wangzhixuan.service.impl;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.wangzhixuan.mapper.NewsMapper;
 import com.wangzhixuan.model.News;
 import com.wangzhixuan.service.INewsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements INewsService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(NewsServiceImpl.class);
 
     @Autowired
     private NewsMapper newsMapper;
 
-    @Resource
-    public RedisTemplate<String, News> redisTemplate;
-
+    @Cacheable(value = "HomePageUser")
     @Override
     public List<News> selectAll(News news) {
+        LOGGER.debug("查询HomePageUser");
         return newsMapper.selectAll(news);
     }
 
+    @Cacheable(value = "AdminUser")
     @Override
     public List<News> selectAllNews(Map<String, Object> map) {
-        Long start = Long.valueOf(String.valueOf(map.get("from")));
-        Long end = start + Long.valueOf(String.valueOf(map.get("size"))) - 1;
-        List<News> newsList = redisTemplate.opsForList().range("NewsList", start, end);
-        if (newsList == null || newsList.size() == 0) {
-            newsList = newsMapper.selectAllNews(map);
-            redisTemplate.opsForList().leftPushAll("NewsList", newsList);
-        }
-        return newsList;
+        LOGGER.debug("查询AdminUser");
+        return newsMapper.selectAllNews(map);
     }
 
     @Override
     public boolean deleteById(int id) {
-        Integer index = findIndexFromRedis(id);
-        if (index != null) {
-            News redisNews = redisTemplate.opsForList().range("NewsList", index, index).get(0);
-            redisTemplate.opsForList().remove("NewsList", 1, redisNews);
-        }
         return newsMapper.deleteById(id);
     }
 
@@ -59,26 +52,27 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
         return newsMapper.selectAllSize();
     }
 
+
+    @Cacheable(value = "NewsCenterUser")
     @Override
-    public int updateNews(News news) {
-        Integer index = findIndexFromRedis(news.getNewsId());
-        if (index != null)
-            redisTemplate.opsForList().set("NewsList", index, news);
-        return newsMapper.updateNews(news);
+    public Page selectByPage(int form,int size,int producttype) {
+//        this.selectPage(page,wrapper);
+        LOGGER.debug("查询NewsCenterUser");
+        News news = new News();
+        news.setProductType(producttype);
+        List<News> newsList = newsMapper.selectAll(news);
+        List<News> newss = new ArrayList<>();
+        for (int i = form; i < size; i++) {
+            newss.add(newsList.get(i));
+        }
+        Page page = new Page(form, size);
+        page.setRecords(newss);
+        return page;
     }
 
-
-    public Integer findIndexFromRedis(int id) {
-        List<News> newsList = redisTemplate.opsForList().range("NewsList", 0, -1);
-//        System.out.println(redisTemplate.opsForList().range("NewsList", 0, -1).size());
-        if (newsList != null && newsList.size() != 0) {
-            for (int i = 0; i < newsList.size(); i++) {
-                if (newsList.get(i).getNewsId() == id) {
-                    return i;
-                }
-            }
-        }
-        return null;
+    @Override
+    public int updateNews(News news) {
+        return newsMapper.updateNews(news);
     }
 
 }

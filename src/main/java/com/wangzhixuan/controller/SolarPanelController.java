@@ -1,6 +1,5 @@
 package com.wangzhixuan.controller;
 
-import com.baomidou.mybatisplus.mapper.Condition;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.wangzhixuan.commons.base.BaseController;
 import com.wangzhixuan.commons.utils.IpAdrressUtil;
@@ -192,7 +191,8 @@ public class SolarPanelController extends BaseController{
     @RequestMapping({"/newsCenter"})
     public String newsCenter(Model model, @RequestParam(value = "pg",defaultValue = "1") Integer pg, @RequestParam(value = "pageSize",defaultValue = "5") Integer pageSize) {
         Page<News> page = new Page(pg, pageSize);
-        this.newsService.selectPage(page, Condition.create().eq("product_Type", 3));
+//        this.newsService.selectPage(page, Condition.create().eq("product_Type", 3));
+        page = newsService.selectByPage(pg, pageSize, 4);
         model.addAttribute("page", page);
         return "customer/solarPanel/newsCenter";
     }

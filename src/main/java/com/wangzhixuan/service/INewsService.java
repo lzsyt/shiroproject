@@ -1,5 +1,6 @@
 package com.wangzhixuan.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.IService;
 import com.wangzhixuan.model.News;
 
@@ -15,5 +16,6 @@ public interface INewsService extends IService<News> {
     News selectById(int id);
     int selectAllSize();
 
+    public Page selectByPage(int form,int size,int producttype);
     int updateNews(News news);
 }

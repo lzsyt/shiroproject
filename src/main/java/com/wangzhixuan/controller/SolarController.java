@@ -1,20 +1,22 @@
 package com.wangzhixuan.controller;
 
-import com.baomidou.mybatisplus.mapper.Condition;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.wangzhixuan.commons.base.BaseController;
 import com.wangzhixuan.commons.utils.IpAdrressUtil;
-import com.wangzhixuan.model.*;
+import com.wangzhixuan.model.Customer;
+import com.wangzhixuan.model.Image;
+import com.wangzhixuan.model.News;
+import com.wangzhixuan.model.Product;
 import com.wangzhixuan.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @description：用户管理
@@ -208,7 +210,8 @@ public class SolarController extends BaseController {
     public String newsCenter(Model model, @RequestParam(value = "pg",defaultValue = "1") Integer pg, @RequestParam(value = "pageSize",defaultValue = "5") Integer pageSize) {
       Page<News> page = new Page<>(pg,pageSize);
       //根据product_Type进行分页查询
-      newsService.selectPage(page, Condition.create().eq("product_Type",5));
+//      newsService.selectPage(page, Condition.create().eq("product_Type",5));
+        page = newsService.selectByPage(pg, pageSize, 4);
       /*System.out.println("新闻总数=======" + page.getTotal());
       System.out.println("新闻纪录=======" + page.getRecords());
       System.out.println("新闻条数=======" + page.getSize());

@@ -35,8 +35,8 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="com.wangzhixuan" level="info" />
-        <Root level="WARN" additivity="false">
+        <Logger name="com.wangzhixuan" level="debug" />
+        <Root level="info" additivity="false">
             <AppenderRef ref="Console" />
             <AppenderRef ref="RollingFile" />
             <AppenderRef ref="RollingFileError" />

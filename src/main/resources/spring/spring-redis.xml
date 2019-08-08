@@ -32,7 +32,7 @@
           p:connectionFactory-ref="jedisConnectionFactory">
         <!--如果不配置Serializer，那么存储的时候缺省使用String，如果用User类型存储，那么会提示错误User can't cast to String！！  -->
         <property name="keySerializer">
-            <bean class="com.wangzhixuan.commons.redis.serialize.RedisKeySerializer"></bean>
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"></bean>
         </property>
         <property name="valueSerializer">
             <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
@@ -49,27 +49,35 @@
     </bean>
 
     <!--spring cache-->
-    <!--<bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager"-->
-          <!--c:redisOperations-ref="redisTemplate">-->
-        <!--&lt;!&ndash; 默认缓存10分钟 &ndash;&gt;-->
-        <!--<property name="defaultExpiration" value="600"/>-->
-        <!--<property name="usePrefix" value="true"/>-->
-        <!--&lt;!&ndash; cacheName 缓存超时配置，半小时，一小时，一天 &ndash;&gt;-->
-        <!--<property name="expires">-->
-            <!--<map key-type="java.lang.String" value-type="java.lang.Long">-->
-                <!--<entry key="halfHour" value="1800"/>-->
-                <!--<entry key="hour" value="3600"/>-->
-                <!--<entry key="oneDay" value="86400"/>-->
-                <!--&lt;!&ndash; shiro cache keys &ndash;&gt;-->
-                <!--<entry key="authorizationCache" value="1800"/>-->
-                <!--<entry key="authenticationCache" value="1800"/>-->
-                <!--<entry key="activeSessionCache" value="1800"/>-->
-            <!--</map>-->
-        <!--</property>-->
+    <bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager"
+          c:redisOperations-ref="redisTemplate">
+        <!-- 默认缓存10分钟 -->
+        <property name="defaultExpiration" value="600"/>
+        <property name="usePrefix" value="true"/>
+        <!-- cacheName 缓存超时配置，半小时，一小时，一天 -->
+        <property name="expires">
+            <map key-type="java.lang.String" value-type="java.lang.Long">
+                <entry key="halfHour" value="1800"/>
+                <entry key="hour" value="3600"/>
+                <entry key="oneDay" value="86400"/>
+                <!-- shiro cache keys -->
+                <entry key="authorizationCache" value="1800"/>
+                <entry key="authenticationCache" value="1800"/>
+                <entry key="activeSessionCache" value="1800"/>
+            </map>
+        </property>
+    </bean>
+
+     <!--&lt;!&ndash;配置RedisCacheConfig&ndash;&gt;-->
+    <!--<bean id="redisCacheConfig" class="com.wangzhixuan.commons.redis.config.RedisCacheConfig">-->
+        <!--<constructor-arg ref="jedisConnectionFactory"/>-->
+        <!--<constructor-arg ref="redisTemplate"/>-->
+        <!--<constructor-arg ref="cacheManager"/>-->
     <!--</bean>-->
-    
+
+
     <!-- cache注解，和spring-ehcache.xml中的只能使用一个 -->
-    <!--<cache:annotation-driven cache-manager="cacheManager" proxy-target-class="true"/>-->
+    <cache:annotation-driven cache-manager="cacheManager" proxy-target-class="true"/>
     <!--自定义redis工具类,在需要缓存的地方注入此类  -->
     <bean id="redisUtil" class="com.wangzhixuan.commons.utils.RedisUtil">
         <property name="redisTemplate" ref="redisTemplate" />

@@ -1,6 +1,5 @@
 package com.wangzhixuan.controller;
 
-import com.baomidou.mybatisplus.mapper.Condition;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.wangzhixuan.commons.base.BaseController;
 import com.wangzhixuan.commons.utils.IpAdrressUtil;
@@ -412,17 +411,17 @@ public class WindEnergyController extends BaseController {
      */
     @PostMapping("/selectCheckName")
     @ResponseBody
-    public String selectCheckName(HttpServletRequest request,Customer customer,String name){
+    public String selectCheckName(HttpServletRequest request, Customer customer, String name) {
         logger.info("进入检测");
-        logger.info("name:"+name);
+        logger.info("name:" + name);
         customer.setName(name);
-        logger.info("name"+customer.getName());
-        List<Customer> list=customerService.selectCheckName(customer);
-        logger.info("list"+list.size());
-        if(list!=null && list.size()>0){
+        logger.info("name" + customer.getName());
+        List<Customer> list = customerService.selectCheckName(customer);
+        logger.info("list" + list.size());
+        if (list != null && list.size() > 0) {
             logger.info("用户名存在");
             return "use";
-        }else{
+        } else {
             logger.info("用户名不存在");
             return "no";
         }
@@ -431,17 +430,18 @@ public class WindEnergyController extends BaseController {
 
     /**
      * 修改密码
+     *
      * @param request
      * @param customer
      * @return
      */
     @PostMapping("/updataPwd")
     @ResponseBody
-    public String UpdataPwd(HttpServletRequest request,Customer customer){
+    public String UpdataPwd(HttpServletRequest request, Customer customer) {
         logger.info("进入修改");
-        logger.info("密码"+customer.getPassword());
-        int count=customerService.updatePwd(customer);
-        if(count>0){
+        logger.info("密码" + customer.getPassword());
+        int count = customerService.updatePwd(customer);
+        if (count > 0) {
             logger.info("大于");
             return "success";
         }else{
@@ -454,7 +454,9 @@ public class WindEnergyController extends BaseController {
     public String newsCenter(Model model, @RequestParam(value = "pg",defaultValue = "1") Integer pg, @RequestParam(value = "pageSize",defaultValue = "5") Integer pageSize) {
         Page<News> page = new Page<>(pg,pageSize);
         //根据product_Type进行分页查询
-        newsService.selectPage(page, Condition.create().eq("product_Type",4));
+//        newsService.selectPage(page, Condition.create().eq("product_Type",4));
+//        newsService.selectByPage(page,Condition.create().eq("product_Type",4));
+        page = newsService.selectByPage(pg, pageSize, 4);
       /*System.out.println("新闻总数=======" + page.getTotal());
       System.out.println("新闻纪录=======" + page.getRecords());
       System.out.println("新闻条数=======" + page.getSize());
@@ -462,7 +464,7 @@ public class WindEnergyController extends BaseController {
       System.out.println("是否有上一页" + page.hasPrevious());
       System.out.println("当前页======" + page.getCurrent());
       System.out.println("总页数======" + page.getPages());*/
-        model.addAttribute("page",page);
+        model.addAttribute("page", page);
         return "/customer/windEnergy/newsCenter";
     }
 }

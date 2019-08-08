@@ -13,25 +13,29 @@
     <!-- 扫描 event包 -->
     <context:component-scan base-package="com.wangzhixuan.event;com.wangzhixuan.task"/>
 
-    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-        <!-- 核心线程数 -->
-        <property name="corePoolSize" value="${task.core_pool_size}" />
-        <!-- 最大线程数 -->
-        <property name="maxPoolSize" value="${task.max_pool_size}" />
-        <!-- 队列最大长度 -->
-        <property name="queueCapacity" value="${task.queue_capacity}" />
-        <!-- 线程池维护线程所允许的空闲时间，默认为60s -->
-        <property name="keepAliveSeconds" value="${task.keep_alive_seconds}" />
-    </bean>
+    <!--<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">-->
+    <!--&lt;!&ndash; 核心线程数 &ndash;&gt;-->
+    <!--<property name="corePoolSize" value="${task.core_pool_size}" />-->
+    <!--&lt;!&ndash; 最大线程数 &ndash;&gt;-->
+    <!--<property name="maxPoolSize" value="${task.max_pool_size}" />-->
+    <!--&lt;!&ndash; 队列最大长度 &ndash;&gt;-->
+    <!--<property name="queueCapacity" value="${task.queue_capacity}" />-->
+    <!--&lt;!&ndash; 线程池维护线程所允许的空闲时间，默认为60s &ndash;&gt;-->
+    <!--<property name="keepAliveSeconds" value="${task.keep_alive_seconds}" />-->
+    <!--</bean>-->
+
+
+    <!--<task:executor id="asynExecutor" pool-size="10-1000" queue-capacity="10" keep-alive="10" rejection-policy="CALLER_RUNS"/>-->
+    <!--<task:annotation-driven executor="asynExecutor"/>-->
 
     <!--&lt;!&ndash; 注解式 &ndash;&gt;-->
     <!--<task:annotation-driven executor="taskExecutor" proxy-target-class="true"/>-->
-  <!--&lt;!&ndash;每天进行一次百度post推送任务&ndash;&gt;-->
-  <!--<task:scheduled-tasks>-->
+    <!--&lt;!&ndash;每天进行一次百度post推送任务&ndash;&gt;-->
+    <!--<task:scheduled-tasks>-->
     <!--<task:scheduled ref="postTask" method="job1" cron="0 0 12 * * ?"/>-->
     <!--<task:scheduled ref="postTask" method="job2" cron="0 0 13 * * ?"/>-->
     <!--<task:scheduled ref="postTask" method="job3" cron="0 0 14 * * ?"/>-->
     <!--<task:scheduled ref="postTask" method="job4" cron="0 0 15 * * ?"/>-->
-  <!--</task:scheduled-tasks>-->
+    <!--</task:scheduled-tasks>-->
 
 </beans>
