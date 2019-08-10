@@ -39,7 +39,7 @@ public class SysLogAspect {
     @Autowired
     private ISysLogService sysLogService;
     @Autowired
-    private VisitorUtil vIsitorUtil;
+    private VisitorUtil visitorUtil;
 
 
     @Pointcut("within(@org.springframework.stereotype.Controller *)")
@@ -96,7 +96,7 @@ public class SysLogAspect {
             }
         }
         LOGGER.info("调用insertVisitor方法线程"+Thread.currentThread().getName());
-        vIsitorUtil.insertVisitor(request);
+        visitorUtil.insertVisitor(request);
         return point.proceed();
     }
 

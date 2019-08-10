@@ -1,12 +1,10 @@
 package com.wangzhixuan.commons.utils;
 
-import com.sun.tools.corba.se.idl.constExpr.Xor;
 import net.sf.json.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
