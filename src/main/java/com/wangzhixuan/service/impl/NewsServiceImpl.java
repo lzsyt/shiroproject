@@ -1,5 +1,6 @@
 package com.wangzhixuan.service.impl;
 
+import com.baomidou.mybatisplus.mapper.Condition;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.wangzhixuan.commons.redis.util.LzsRedisUtil;
@@ -40,17 +41,8 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
     @Cacheable(value = "redis_news", key = "'NewsCenterNews_'+#form+'_'+#size+'_'+#producttype")
     @Override
     public Page selectByPage(int form, int size, int producttype) {
-//        this.selectPage(page,wrapper);
-        LOGGER.debug("查询NewsCenterUser");
-        News news = new News();
-        news.setProductType(producttype);
-        List<News> newsList = newsMapper.selectAll(news);
-        List<News> newss = new ArrayList<>();
-        for (int i = form; i < size; i++) {
-            newss.add(newsList.get(i));
-        }
         Page page = new Page(form, size);
-        page.setRecords(newss);
+        this.selectPage(page, Condition.create().eq("product_Type", producttype));
         return page;
     }
 

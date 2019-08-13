@@ -24,6 +24,9 @@ public class VisitorUtil {
     @Async
     public void insertVisitor(HttpServletRequest request) {
         LOGGER.info("执行insertVisitor方法线程" + Thread.currentThread().getName());
+        if (null==request){
+            return;
+        }
         String uri = request.getRequestURI();
         String url = uri;
         uri = uri.replaceAll("en_", "");

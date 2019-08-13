@@ -17,9 +17,9 @@ public class VisitorFilter extends OncePerRequestFilter {
         //请求的页面
         String uri = request.getRequestURI();
 
-        filterChain.doFilter(request, response);
+//        filterChain.doFilter(request, response);
 
-        if (uri.indexOf("/customer") != -1) {
+        if (uri.contains("/customer")) {
             filterChain.doFilter(request, response);
 
         }else {
