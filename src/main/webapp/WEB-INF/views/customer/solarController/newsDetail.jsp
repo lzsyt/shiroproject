@@ -70,7 +70,7 @@
     <div class="about">
       <div class="container">
         <ul class="about_head">
-          <li class="about_head-left"><h1>新闻中心</h1></li>
+          <li class="about_head-left"><h1>新闻详情</h1></li>
           <li class="about_head-right"><p>News Details</p></li>
         </ul>
       </div>
@@ -102,11 +102,7 @@
       </div>
     </div>
     <div class="container">
-      <div class="new-t1">
-        <div class="new-t2" style="margin-top: 30px ">
-          <span>新闻详情</span>
-        </div>
-      </div>
+
       <div class="t-col-all">
         <div class="t-col-l1">
           <span class="t-col-t1">${news.newsName}</span>

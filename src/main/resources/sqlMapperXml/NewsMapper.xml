@@ -39,7 +39,22 @@
   </select>
   <update id="updateNews" parameterType="News">
     UPDATE news set news_name=#{newsName},news_description=#{newsDescription},news_content=#{newsContent},
-    create_time=#{createTime},en_news_name=#{enNewsName},en_news_description=#{enNewsDescription},en_news_content=#{enNewsContent},product_type=#{productType}
+    en_news_name=#{enNewsName},en_news_description=#{enNewsDescription},en_news_content=#{enNewsContent}
     where news_id=#{newsId}
   </update>
+    <update id="updb" parameterType="News">
+       UPDATE `news`
+       SET `news_name` = #{newsName},
+       `news_description` = #{newsDescription},
+       `news_content` = #{newsContent},
+       `en_news_name` = #{enNewsName},
+       `en_news_description` = #{enNewsDescription},
+       `en_news_content` = #{enNewsContent},
+       `product_type` = #{productType},
+       `title` = #{title},
+       `keyword` = #{keyword},
+       `description` = #{description}
+        WHERE
+	   `news_id` = #{newsId};
+    </update>
 </mapper>

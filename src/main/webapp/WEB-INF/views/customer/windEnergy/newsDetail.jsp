@@ -44,21 +44,42 @@
 <jsp:include page="header.jsp"></jsp:include>
 <div id="content" style="background: #fff">
   <div id="contentPage">
-    <%--<jsp:include page="header.jsp"></jsp:include>--%>
     <div class="about">
       <div class="container">
         <ul class="about_head">
-          <li class="about_head-left"><h1>新闻中心</h1></li>
+          <li class="about_head-left"><h1>新闻详情</h1></li>
           <li class="about_head-right"><p>News Details</p></li>
         </ul>
       </div>
     </div>
-    <div class="container" >
-      <div class="new-t1">
-        <div class="new-t2" style="margin-top: 30px ">
-          <span>新闻详情</span>
+    <%--<div class="ejlnNav">
+      <div class="ejlmNacIn">
+        <div class="ejlmNR fontcolor1">
+          <a href="http://kongzhiqi.com/solarController/main">首页</a>
+          &nbsp;&nbsp;/&nbsp;&nbsp;
+          <a>新闻详情</a>
         </div>
       </div>
+    </div>--%>
+    <%--<div class="abo_menu_wrap">
+      <div class="main clearfix">
+        <div class="bread2">
+          <span><a href="http://www.kongzhiqi.com">首页</a><i></i></span>
+          <a style="pointer-events:none;"><a href="http://www.kongzhiqi.com/solarController/newsCenter">新闻中心</a><i></i><a style="pointer-events:none;">新闻详情</a></a>
+        </div>
+      </div>
+    </div>--%>
+    <div class="abo_menu_wrap">
+      <div class="main clearfix">
+        <div class="bread2">
+          <span><a href="http://yongdong.com.cn/">首页</a></span><i></i>
+          <a href="http://yongdong.com.cn/windEnergy/newsCenter">新闻中心</a><i></i>
+          <a style="pointer-events:none;">新闻详情</a>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+
       <div class="t-col-all">
         <div class="t-col-l1">
           <span class="t-col-t1">${news.newsName}</span>
@@ -70,7 +91,7 @@
     <div class="container new-detail">
       <div class="c-col">
         <div class="c-col-l1">
-          <p id="detailNew">${news.newsDescription}</p>
+          <p  id="detailNew">${news.newsDescription}</p>
         </div>
       </div>
     </div>

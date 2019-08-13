@@ -211,7 +211,7 @@ public class SolarController extends BaseController {
       Page<News> page = new Page<>(pg,pageSize);
       //根据product_Type进行分页查询
 //      newsService.selectPage(page, Condition.create().eq("product_Type",5));
-        page = newsService.selectByPage(pg, pageSize, 4);
+        page = newsService.selectByPage(pg, pageSize, 5);
       /*System.out.println("新闻总数=======" + page.getTotal());
       System.out.println("新闻纪录=======" + page.getRecords());
       System.out.println("新闻条数=======" + page.getSize());

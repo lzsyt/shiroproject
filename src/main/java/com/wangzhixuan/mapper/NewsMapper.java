@@ -13,4 +13,6 @@ public interface NewsMapper extends BaseMapper<News> {
     News selectById(int id);
     int selectAllSize();
     int updateNews(News news);
+
+    void updb(News model);
 }

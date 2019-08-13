@@ -192,7 +192,7 @@ public class SolarPanelController extends BaseController{
     public String newsCenter(Model model, @RequestParam(value = "pg",defaultValue = "1") Integer pg, @RequestParam(value = "pageSize",defaultValue = "5") Integer pageSize) {
         Page<News> page = new Page(pg, pageSize);
 //        this.newsService.selectPage(page, Condition.create().eq("product_Type", 3));
-        page = newsService.selectByPage(pg, pageSize, 4);
+        page = newsService.selectByPage(pg, pageSize, 3);
         model.addAttribute("page", page);
         return "customer/solarPanel/newsCenter";
     }
