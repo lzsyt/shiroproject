@@ -184,8 +184,8 @@
         <div class="abo_menu_wrap">
             <div class="main clearfix">
                 <div class="bread2">
-                    <span><a href="http://www.guanghe.cn/">首页</a></span><i></i>
-                    <a href="http://www.guanghe.cn/solarPanel/newsCenter">新闻中心</a><i></i>
+                    <span><a href="${staticPath }/solarPanel/main">首页</a></span><i></i>
+                    <a href="${staticPath }/solarPanel/newsCenter">新闻中心</a><i></i>
                     <a style="pointer-events:none;">新闻详情</a>
                 </div>
             </div>
