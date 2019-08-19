@@ -1,7 +1,6 @@
-package com.wangzhixuan.commons.scan;
+package com.wangzhixuan.commons.aspect;
 
 import com.wangzhixuan.commons.utils.StringUtils;
-import com.wangzhixuan.commons.utils.VisitorUtil;
 import com.wangzhixuan.model.SysLog;
 import com.wangzhixuan.service.ISysLogService;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +14,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -32,14 +30,12 @@ import java.util.Enumeration;
 @Aspect
 @Component
 @Order
-@EnableAsync
 public class SysLogAspect {
     private static final Logger LOGGER = LogManager.getLogger(SysLogAspect.class);
 
     @Autowired
     private ISysLogService sysLogService;
-    @Autowired
-    private VisitorUtil visitorUtil;
+
 
 
     @Pointcut("within(@org.springframework.stereotype.Controller *)")
@@ -95,11 +91,8 @@ public class SysLogAspect {
                 LOGGER.error(var13.getMessage(), var13);
             }
         }
-        LOGGER.info("调用insertVisitor方法线程"+Thread.currentThread().getName());
-        visitorUtil.insertVisitor(request);
         return point.proceed();
     }
-
 
 
     private boolean isWriteLog(String method) {
@@ -120,5 +113,7 @@ public class SysLogAspect {
             return false;
         }
     }
+
+
 
 }

@@ -13,6 +13,7 @@ public class IpAdrressUtil {
 
     /**
      * 获取Ip地址
+     *
      * @param request
      * @return
      */
@@ -39,25 +40,25 @@ public class IpAdrressUtil {
         }
         if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
             XFor = request.getHeader("Proxy-Client-IP");
-            if (StringUtils.isNotBlank(XFor)){
+            if (StringUtils.isNotBlank(XFor)) {
                 LOGGER.info("返回request.getHeader(\"Proxy-Client-IP\")");
             }
         }
         if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
             XFor = request.getHeader("WL-Proxy-Client-IP");
-            if (StringUtils.isNotBlank(XFor)){
+            if (StringUtils.isNotBlank(XFor)) {
                 LOGGER.info("返回request.getHeader(\"WL-Proxy-Client-IP\")");
             }
         }
         if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
             XFor = request.getHeader("HTTP_CLIENT_IP");
-            if (StringUtils.isNotBlank(XFor)){
+            if (StringUtils.isNotBlank(XFor)) {
                 LOGGER.info("返回request.getHeader(\"HTTP_CLIENT_IP\")");
             }
         }
         if (StringUtils.isBlank(XFor) || "unknown".equalsIgnoreCase(XFor)) {
             XFor = request.getHeader("HTTP_X_FORWARDED_FOR");
-            if (StringUtils.isNotBlank(XFor)){
+            if (StringUtils.isNotBlank(XFor)) {
                 LOGGER.info("返回request.getHeader(\"HTTP_X_FORWARDED_FOR\")");
             }
         }
@@ -65,18 +66,20 @@ public class IpAdrressUtil {
             XFor = request.getRemoteAddr();
             LOGGER.info("getRemoteAddr:" + XFor);
         }
-      if (StringUtils.isNotBlank(XFor)){
-          LOGGER.info("返回IP，XFor={}", XFor);
-      }else{
-          XFor = String.valueOf(Math.random());
-          LOGGER.info("IP为空,使用随机数代替,XFor={}", XFor);
-      }
+        if (StringUtils.isNotBlank(XFor)) {
+            LOGGER.info("返回IP，XFor={}", XFor);
+        } else {
+            XFor = String.valueOf(Math.random());
+            LOGGER.info("IP为空,使用随机数代替,XFor={}", XFor);
+        }
         return XFor;
 
     }
-    public  static Map<String,String> findRealAddress(HttpServletRequest request){
+
+
+    public static Map<String, String> findRealAddress(HttpServletRequest request) {
         String ip = getIpAdrress(request);
-        if (StringUtils.isBlank(ip)){
+        if (StringUtils.isBlank(ip)) {
             LOGGER.info("Map<String,String> findRealAddress 方法的得到的ip为空");
         }
         Map<String, String> addressMap = new HashMap<String, String>();
@@ -117,11 +120,11 @@ public class IpAdrressUtil {
             }
 
 
-        }else{
+        } else {
             LOGGER.info(" Map<String,String> findRealAddress ip  为空，没用进入通过ip获得地址的判断中");
         }
 
-        if (StringUtils.isBlank(addressMap.get("ip"))){
+        if (StringUtils.isBlank(addressMap.get("ip"))) {
             LOGGER.info("ip赋值为随机数");
             addressMap.put("ip", String.valueOf(Math.random()));
         }
@@ -130,12 +133,29 @@ public class IpAdrressUtil {
         return addressMap;
     }
 
-    public static void main(String[] args) {
-      /*  String url="http://ip.taobao.com/service/getIpInfo.php?ip= 175.13.240.137";
 
-        JSONObject result= HttpUtils.sendGet(url,"");
-        //country":"中国","area":"","region":"湖南","city":"长沙",
-        String address=result.toString();
-        System.out.println(address);*/
+    public static String getAddress(String ip) {
+        String url = "http://ip.taobao.com/service/getIpInfo.php";
+        String rs = null;
+        try {
+            rs = HttpUtils.sendPost(url, "ip=" + ip);
+        } catch (Exception e) {
+            LOGGER.info("ip为{}，没有获取到地址", ip);
+            e.printStackTrace();
+        }
+        String address = "";
+        if (StringUtils.isNotBlank(rs)) {
+            LOGGER.info("rs不为空，开始地址解析");
+
+            JSONObject result = JSONObject.fromObject(rs);
+            JSONObject data = JSONObject.fromObject(result.get("data"));
+            if (data.get("region") == null) {
+                address = String.valueOf(data.get("country"));
+            } else {
+                address = String.valueOf(data.get("region")) + data.get("city");
+            }
+
+        }
+        return address;
     }
 }

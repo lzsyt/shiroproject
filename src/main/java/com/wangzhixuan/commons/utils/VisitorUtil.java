@@ -1,5 +1,6 @@
 package com.wangzhixuan.commons.utils;
 
+import com.wangzhixuan.commons.redis.util.LzsRedisUtil;
 import com.wangzhixuan.model.Visitor;
 import com.wangzhixuan.service.IVisitorService;
 import org.apache.logging.log4j.LogManager;
@@ -7,27 +8,24 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Date;
-import java.util.Map;
 
 @Component
 public class VisitorUtil {
 
     @Autowired
+    private LzsRedisUtil lzsRedisUtil;
+
+    @Autowired
     private IVisitorService visitorService;
 
-    private static final Logger LOGGER  =  LogManager.getLogger(VisitorUtil.class);
+    private static final Logger LOGGER = LogManager.getLogger(VisitorUtil.class);
 
     @Async
-    public void insertVisitor(HttpServletRequest request) {
+    public void insertVisitor(String uri, String ip, Integer visitorType) {
         LOGGER.info("执行insertVisitor方法线程" + Thread.currentThread().getName());
-        if (null==request){
-            return;
-        }
-        String uri = request.getRequestURI();
         String url = uri;
         uri = uri.replaceAll("en_", "");
 
@@ -63,31 +61,18 @@ public class VisitorUtil {
 
             visitor.setVisitorTime(new Date());
             visitor.setVisitorPage(uri);
-            HttpSession session = request.getSession();
-            if (session.getAttribute("ip") != null && session.getAttribute("address") != null) {
-                requestHeader = String.valueOf(session.getAttribute("ip"));
-                String address = String.valueOf(session.getAttribute("address"));
-                visitor.setIp(requestHeader);
+            visitor.setIp(ip);
+            visitor.setVisitorType(visitorType);
+
+            Jedis jedis = lzsRedisUtil.getJedis();
+            if (jedis.get(ip) != null) {
+                visitor.setVisitorAddr(jedis.get(ip));
+            }else{
+                String address = IpAdrressUtil.getAddress(ip);
                 visitor.setVisitorAddr(address);
-            } else {
-                Map<String, String> map = IpAdrressUtil.findRealAddress(request);
-                visitor.setIp((String) map.get("ip"));
-                visitor.setVisitorAddr((String) map.get("address"));
-                session.setAttribute("ip", map.get("ip"));
-                session.setAttribute("address", map.get("address"));
-
-                if (StringUtils.isBlank(map.get("ip"))) {
-                    System.out.println(visitor.toString());
-                    throw new RuntimeException("ip 为空");
-                }
+                jedis.set(ip, address);
             }
 
-            requestHeader = request.getHeader("user-agent");
-            if (isMobileDevice(requestHeader)) {
-                visitor.setVisitorType(1);
-            } else {
-                visitor.setVisitorType(2);
-            }
 
             if (StringUtils.isNotBlank(visitor.getVisitorPageName())) {
                 if (url.contains("en_")) {
@@ -169,21 +154,5 @@ public class VisitorUtil {
         return visitor;
     }
 
-    public boolean isMobileDevice(String requestHeader) {
-        String[] deviceArray = new String[]{"android", "mac os", "windows phone"};
-        if (requestHeader == null) {
-            return false;
-        } else {
-            requestHeader = requestHeader.toLowerCase();
-
-            for (int i = 0; i < deviceArray.length; ++i) {
-                if (requestHeader.indexOf(deviceArray[i]) > 0) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-    }
 
 }
