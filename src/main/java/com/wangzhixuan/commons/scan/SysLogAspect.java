@@ -1,5 +1,6 @@
 package com.wangzhixuan.commons.scan;
 
+import com.wangzhixuan.commons.utils.IpAdrressUtil;
 import com.wangzhixuan.commons.utils.StringUtils;
 import com.wangzhixuan.commons.utils.VisitorUtil;
 import com.wangzhixuan.model.SysLog;
@@ -96,7 +97,14 @@ public class SysLogAspect {
             }
         }
         LOGGER.info("调用insertVisitor方法线程"+Thread.currentThread().getName());
-        visitorUtil.insertVisitor(request);
+        String requestHeader = request.getHeader("user-agent");
+        Integer visitortype = 0;
+        if (isMobileDevice(requestHeader)) {
+            visitortype = 1;
+        } else {
+            visitortype = 2;
+        }
+        visitorUtil.insertVisitor(request.getRequestURI(), IpAdrressUtil.getIpAdrress(request), visitortype);
         return point.proceed();
     }
 
@@ -113,6 +121,23 @@ public class SysLogAspect {
             for (int var5 = 0; var5 < var4; ++var5) {
                 String s = var3[var5];
                 if (method.indexOf(s) > -1) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
+    public boolean isMobileDevice(String requestHeader) {
+        String[] deviceArray = new String[]{"android", "mac os", "windows phone"};
+        if (requestHeader == null) {
+            return false;
+        } else {
+            requestHeader = requestHeader.toLowerCase();
+
+            for (int i = 0; i < deviceArray.length; ++i) {
+                if (requestHeader.indexOf(deviceArray[i]) > 0) {
                     return true;
                 }
             }
