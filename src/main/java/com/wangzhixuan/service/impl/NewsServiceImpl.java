@@ -162,6 +162,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
         while (keyIterable.hasNext()) {
             jedis.del(keyIterable.next());
         }
+        jedis.close();
         LOGGER.info("刷掉redis 里面的脏数据");
     }
 }

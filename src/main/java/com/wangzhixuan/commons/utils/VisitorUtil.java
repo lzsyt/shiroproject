@@ -72,6 +72,7 @@ public class VisitorUtil {
                 visitor.setVisitorAddr(address);
                 jedis.set(ip, address);
             }
+            jedis.close();
 
 
             if (StringUtils.isNotBlank(visitor.getVisitorPageName())) {
