@@ -57,8 +57,4 @@
 		 GROUP BY  DATE_FORMAT(t.visitor_time,'%e')
 	</select>
 
-	<select id="findYear" resultType="java.lang.Integer">
-		select DATE_FORMAT(visitor_time,'%y') from visitor GROUP BY DATE_FORMAT(visitor_time,'%y')
-	</select>
-
 </mapper>

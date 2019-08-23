@@ -154,15 +154,20 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
      */
     public void reflushRedis() {
         Jedis jedis = lzsRedisUtil.getJedis();
-        Set<String> keySet = new HashSet<>();
-        keySet.addAll(jedis.keys("redis_news:NewsCenterNews_*"));
-        keySet.addAll(jedis.keys("redis_news:HomePageNews_*"));
-        keySet.addAll(jedis.keys("redis_news:AdminNewsList_*"));
-        Iterator<String> keyIterable = keySet.iterator();
-        while (keyIterable.hasNext()) {
-            jedis.del(keyIterable.next());
+        try {
+            Set<String> keySet = new HashSet<>();
+            keySet.addAll(jedis.keys("redis_news:NewsCenterNews_*"));
+            keySet.addAll(jedis.keys("redis_news:HomePageNews_*"));
+            keySet.addAll(jedis.keys("redis_news:AdminNewsList_*"));
+            Iterator<String> keyIterable = keySet.iterator();
+            while (keyIterable.hasNext()) {
+                jedis.del(keyIterable.next());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            jedis.close();
         }
-        jedis.close();
         LOGGER.info("刷掉redis 里面的脏数据");
     }
 }

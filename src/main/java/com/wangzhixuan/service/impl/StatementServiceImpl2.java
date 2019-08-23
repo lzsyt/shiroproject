@@ -1,7 +1,5 @@
 package com.wangzhixuan.service.impl;
 
-import net.sf.json.JSON;
-import net.sf.json.JSONArray;
 import com.wangzhixuan.mapper.StatementVoMapper;
 import com.wangzhixuan.model.vo.StatementVo;
 import com.wangzhixuan.service.StatementService;
@@ -134,8 +132,7 @@ public class StatementServiceImpl2 implements StatementService {
             }
         });
         List<Integer> integerList = new ArrayList<>();
-        for (StatementVo s: list
-             ) {
+        for (StatementVo s: list) {
             integerList.add(s.getData());
         }
         return integerList;

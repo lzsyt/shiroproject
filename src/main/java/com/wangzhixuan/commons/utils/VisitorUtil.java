@@ -65,21 +65,27 @@ public class VisitorUtil {
             visitor.setVisitorType(visitorType);
 
             Jedis jedis = lzsRedisUtil.getJedis();
-            if (jedis.get(ip) != null) {
-                visitor.setVisitorAddr(jedis.get(ip));
-            }else{
-                String address = IpAdrressUtil.getAddress(ip);
-                visitor.setVisitorAddr(address);
-                jedis.set(ip, address);
-            }
-            jedis.close();
-
-
-            if (StringUtils.isNotBlank(visitor.getVisitorPageName())) {
-                if (url.contains("en_")) {
-                    visitor.setVisitorPageName("英文" + visitor.getVisitorPageName());
+            try {
+                if (jedis.get(ip) != null) {
+                    LOGGER.info("RedisUtil中存有此ip信息，直接从redis中获取地址，ip为{}", ip);
+                    visitor.setVisitorAddr(jedis.get(ip));
+                }else{
+                    String address = IpAdrressUtil.getAddress(ip);
+                    visitor.setVisitorAddr(address);
+                    jedis.set(ip, address, "nx", "ex", 10 * 60);
+                    LOGGER.info("RedisUtil中没有此ip信息，从方法中查询，ip为{}", ip);
                 }
-                visitorService.insert(visitor);
+
+                if (StringUtils.isNotBlank(visitor.getVisitorPageName())) {
+                    if (url.contains("en_")) {
+                        visitor.setVisitorPageName("英文" + visitor.getVisitorPageName());
+                    }
+                    visitorService.insert(visitor);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                jedis.close();
             }
         }
 
