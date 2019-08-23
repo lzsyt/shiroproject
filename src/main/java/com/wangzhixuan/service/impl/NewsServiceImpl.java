@@ -3,7 +3,7 @@ package com.wangzhixuan.service.impl;
 import com.baomidou.mybatisplus.mapper.Condition;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.wangzhixuan.commons.redis.util.LzsRedisUtil;
+import com.wangzhixuan.commons.redis.util.JedisUtil;
 import com.wangzhixuan.mapper.NewsMapper;
 import com.wangzhixuan.model.News;
 import com.wangzhixuan.service.INewsService;
@@ -28,20 +28,20 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
 
 
     @Autowired
-    private LzsRedisUtil lzsRedisUtil;
+    private JedisUtil jedisUtil;
 
     /**
      * 新闻中心的缓存
      *
-     * @param form
-     * @param size
-     * @param producttype
-     * @return
+     * @param form  起始
+     * @param size  大小
+     * @param producttype  类型
+     * @return 新闻
      */
     @Cacheable(value = "redis_news", key = "'NewsCenterNews_'+#form+'_'+#size+'_'+#producttype")
     @Override
     public Page selectByPage(int form, int size, int producttype) {
-        Page page = new Page(form, size);
+        Page<News> page = new Page<>(form, size);
         this.selectPage(page, Condition.create().eq("product_Type", producttype));
         return page;
     }
@@ -49,8 +49,8 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
     /**
      * 首页的新闻缓存
      *
-     * @param news
-     * @return
+     * @param news 查询条件
+     * @return 新闻列表
      */
     @Cacheable(value = "redis_news", key = "'HomePageNews_'+#news.productType")
     @Override
@@ -62,7 +62,7 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
     /**
      * 查询数量的方法
      *
-     * @return
+     * @return 数量
      */
     @Override
     public int selectAllSize() {
@@ -74,9 +74,9 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
     /**
      * 后台管理的缓存
      *
-     * @param currentPage
-     * @param size
-     * @return
+     * @param currentPage  当前页码
+     * @param size 大小
+     * @return 新闻
      */
     @Cacheable(value = "redis_news", key = "'AdminNewsList_'+#currentPage+'_'+#size")
     @Override
@@ -86,31 +86,29 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
         Map<String, Object> map = new HashMap<>();
         map.put("from", from);
         map.put("size", size);
-        List<News> newsList = newsMapper.selectAllNews(map);
-        return newsList;
+        return newsMapper.selectAllNews(map);
     }
 
     /**
      * 根据id找到某一个
      *
-     * @param id
-     * @return
+     * @param id id
+     * @return 新闻
      */
     @Cacheable(value = "news", key = "'AdminNews_'+#id")
     @Override
     public News findById(int id) {
         LOGGER.info("findById,id={}", id);
-        News news = newsMapper.selectById(id);
-        return news;
+        return newsMapper.selectById(id);
     }
 
     /**
      * 删除
      *
-     * @param id
-     * @return
+     * @param id id
+     * @return 是否成功
      */
-    @CacheEvict(value = "news", key = "'AdminNews_'+#id", beforeInvocation = false)
+    @CacheEvict(value = "news", key = "'AdminNews_'+#id")
     @Override
     public boolean deleteById(int id) {
         reflushRedis();
@@ -121,8 +119,8 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
     /**
      * 更新
      *
-     * @param news
-     * @return
+     * @param news  要跟新的新闻
+     * @return 新闻
      */
     @CachePut(value = "news", key = "'AdminNews_'+#news.newsId")
     @Override
@@ -136,8 +134,8 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
     /**
      * 插入
      *
-     * @param news
-     * @return
+     * @param news 要插入的新闻
+     * @return 新闻
      */
     @CachePut(value = "news", key = "'AdminNews_'+#news.newsId")
     @Override
@@ -152,21 +150,17 @@ public class NewsServiceImpl extends ServiceImpl<NewsMapper, News> implements IN
     /**
      * 此方法用于刷掉redis 里面的脏数据
      */
-    public void reflushRedis() {
-        Jedis jedis = lzsRedisUtil.getJedis();
-        try {
+    private void reflushRedis() {
+        try (Jedis jedis = jedisUtil.getJedis()) {
             Set<String> keySet = new HashSet<>();
             keySet.addAll(jedis.keys("redis_news:NewsCenterNews_*"));
             keySet.addAll(jedis.keys("redis_news:HomePageNews_*"));
             keySet.addAll(jedis.keys("redis_news:AdminNewsList_*"));
-            Iterator<String> keyIterable = keySet.iterator();
-            while (keyIterable.hasNext()) {
-                jedis.del(keyIterable.next());
+            for (String s : keySet) {
+                jedis.del(s);
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            jedis.close();
         }
         LOGGER.info("刷掉redis 里面的脏数据");
     }

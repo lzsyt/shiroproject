@@ -10,18 +10,18 @@ import redis.clients.jedis.JedisPool;
 import java.lang.reflect.Field;
 
 @Component
-public class LzsRedisUtil {
+public class JedisUtil {
     @Autowired
     private JedisConnectionFactory jedisConnectionFactory;
 
     private JedisPool jedisPool;
 
-    public Jedis getJedis() {// 记的关闭jedis
+    public Jedis getJedis() {
         afterPropertiesSet();
         return jedisPool.getResource();
     }
 
-    public void afterPropertiesSet() {
+    private void afterPropertiesSet() {
         Field poolField = ReflectionUtils.findField(JedisConnectionFactory.class, "pool");
         ReflectionUtils.makeAccessible(poolField);
         jedisPool = (JedisPool) ReflectionUtils.getField(poolField, jedisConnectionFactory);

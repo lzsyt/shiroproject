@@ -1,6 +1,6 @@
 package com.wangzhixuan.commons.utils;
 
-import com.wangzhixuan.commons.redis.util.LzsRedisUtil;
+import com.wangzhixuan.commons.redis.util.JedisUtil;
 import com.wangzhixuan.model.Visitor;
 import com.wangzhixuan.service.IVisitorService;
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +16,7 @@ import java.util.Date;
 public class VisitorUtil {
 
     @Autowired
-    private LzsRedisUtil lzsRedisUtil;
+    private JedisUtil jedisUtil;
 
     @Autowired
     private IVisitorService visitorService;
@@ -64,12 +64,11 @@ public class VisitorUtil {
             visitor.setIp(ip);
             visitor.setVisitorType(visitorType);
 
-            Jedis jedis = lzsRedisUtil.getJedis();
-            try {
+            try (Jedis jedis = jedisUtil.getJedis()) {
                 if (jedis.get(ip) != null) {
                     LOGGER.info("RedisUtil中存有此ip信息，直接从redis中获取地址，ip为{}", ip);
                     visitor.setVisitorAddr(jedis.get(ip));
-                }else{
+                } else {
                     String address = IpAdrressUtil.getAddress(ip);
                     visitor.setVisitorAddr(address);
                     jedis.set(ip, address, "nx", "ex", 10 * 60);
@@ -84,14 +83,12 @@ public class VisitorUtil {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
-                jedis.close();
             }
         }
 
     }
 
-    public Visitor distinguishWebsite(String url, Visitor visitor) {
+    private Visitor distinguishWebsite(String url, Visitor visitor) {
         if (url.contains("/solarController/main")) {
             visitor.setVisitorPageName("控制器主页");
         } else {
